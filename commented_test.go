@@ -27,7 +27,7 @@ func TestParse(t *testing.T) {
 
   `
 
-	tmpl = Parse([]byte(tmpl), false)
+	tmpl = Parse(tmpl, false)
 	assert.Equal(t, etmpl, string(tmpl))
 
 	/////////////////////////
@@ -52,7 +52,7 @@ func TestParse(t *testing.T) {
 
   `
 
-	tmpl = Parse([]byte(tmpl), false)
+	tmpl = Parse(tmpl, false)
 	assert.Equal(t, etmpl, string(tmpl))
 
 	//////////////////////////
@@ -77,7 +77,7 @@ func TestParse(t *testing.T) {
 
   `
 
-	tmpl = Parse([]byte(tmpl), false)
+	tmpl = Parse(tmpl, false)
 	assert.Equal(t, etmpl, string(tmpl))
 
 }
@@ -111,7 +111,7 @@ package {{.Package}}
 
   `
 
-	tmpl = Parse([]byte(tmpl), false)
+	tmpl = Parse(tmpl, false)
 	assert.Equal(t, etmpl, string(tmpl))
 }
 
@@ -126,6 +126,6 @@ func (u *User) FindByID(id hide.Int64) error
 
   `
 
-	tmpl = ParseReplace([]byte(tmpl), true)
+	tmpl = ParseReplace(tmpl, "[", "]", true)
 	assert.Equal(t, etmpl, string(tmpl))
 }

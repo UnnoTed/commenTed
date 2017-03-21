@@ -57,7 +57,7 @@ func Parse(data []byte, debug bool) []byte {
 }
 
 // ParseReplace ya txt
-func ParseReplace(data []byte, debug bool) []byte {
+func ParseReplace(data []byte, start string, end string, debug bool) []byte {
 	lines := strings.Split(string(data), "\n")
 
 	var lastLine string
@@ -67,8 +67,11 @@ func ParseReplace(data []byte, debug bool) []byte {
 			list := strings.Split(replaces, " - ")
 
 			for _, r := range list {
-				data := strings.Split(strings.Trim(r[1:len(r)-1], " "), "|")
-				log.Println("data", data)
+				r = strings.TrimSpace(r)
+				r = strings.TrimPrefix(r, start)
+				r = strings.TrimSuffix(r, end)
+				data := strings.Split(r, "|")
+				log.Println("data", r)
 
 				lastLine = strings.Replace(lastLine, data[0], data[1], -1)
 				lines[i-1] = lastLine

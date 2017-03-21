@@ -27,7 +27,7 @@ func TestParse(t *testing.T) {
 
   `
 
-	tmpl = Parse([]byte(tmpl), true)
+	tmpl = Parse([]byte(tmpl), false)
 	assert.Equal(t, etmpl, string(tmpl))
 
 	/////////////////////////
@@ -52,7 +52,7 @@ func TestParse(t *testing.T) {
 
   `
 
-	tmpl = Parse([]byte(tmpl), true)
+	tmpl = Parse([]byte(tmpl), false)
 	assert.Equal(t, etmpl, string(tmpl))
 
 	//////////////////////////
@@ -77,7 +77,7 @@ func TestParse(t *testing.T) {
 
   `
 
-	tmpl = Parse([]byte(tmpl), true)
+	tmpl = Parse([]byte(tmpl), false)
 	assert.Equal(t, etmpl, string(tmpl))
 
 }
@@ -111,6 +111,21 @@ package {{.Package}}
 
   `
 
-	tmpl = Parse([]byte(tmpl), true)
+	tmpl = Parse([]byte(tmpl), false)
+	assert.Equal(t, etmpl, string(tmpl))
+}
+
+func TestReplacer(t *testing.T) {
+	tmpl := []byte(`
+func (u *User) FindByNAME(data string) error
+// c:replace:up [NAME|ID] - [data string|id hide.Int64]
+  `)
+
+	etmpl := `
+func (u *User) FindByID(id hide.Int64) error
+
+  `
+
+	tmpl = ParseReplace([]byte(tmpl), true)
 	assert.Equal(t, etmpl, string(tmpl))
 }

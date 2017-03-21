@@ -7,11 +7,12 @@ import (
 )
 
 const (
-	comment     = `(\/\/[\s]+`
-	startRegexp = comment + `c:remove)`
-	endRegexp   = comment + `?)c:end` // ([^\n]+)
-	lineRegexp  = comment + `)`
-	tooRegexp   = comment + `c:too)`
+	comment         = `(\/\/[\s]+`
+	startRegexp     = comment + `c:remove)`
+	endRegexp       = comment + `?)c:end` // ([^\n]+)
+	lineRegexp      = comment + `)`
+	tooRegexp       = comment + `c:too)`
+	replaceUpRegexp = comment + `c:replace:up[\s]+)`
 )
 
 var startExp = regexp.MustCompile(startRegexp)
@@ -19,6 +20,7 @@ var exp = regexp.MustCompile(startRegexp + `([\s\S]+?)` + endRegexp)
 var lineExp = regexp.MustCompile(lineRegexp)
 var tooExp = regexp.MustCompile(tooRegexp)
 var endExp = regexp.MustCompile(endRegexp)
+var replaceUpExp = regexp.MustCompile(replaceUpRegexp)
 
 // Parse ya txt
 func Parse(data []byte, debug bool) []byte {
@@ -52,4 +54,31 @@ func Parse(data []byte, debug bool) []byte {
 	})
 
 	return []byte(src)
+}
+
+// ParseReplace ya txt
+func ParseReplace(data []byte, debug bool) []byte {
+	lines := strings.Split(string(data), "\n")
+
+	var lastLine string
+	for i := range lines {
+		if replaceUpExp.MatchString(lines[i]) {
+			replaces := replaceUpExp.ReplaceAllString(lines[i], "")
+			list := strings.Split(replaces, " - ")
+
+			for _, r := range list {
+				data := strings.Split(strings.Trim(r[1:len(r)-1], " "), "|")
+				log.Println("data", data)
+
+				lastLine = strings.Replace(lastLine, data[0], data[1], -1)
+				lines[i-1] = lastLine
+			}
+
+			lines[i] = ""
+		}
+
+		lastLine = lines[i]
+	}
+
+	return []byte(strings.Join(lines, "\n"))
 }

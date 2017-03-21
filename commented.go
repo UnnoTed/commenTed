@@ -71,7 +71,10 @@ func ParseReplace(data []byte, start string, end string, debug bool) []byte {
 				r = strings.TrimPrefix(r, start)
 				r = strings.TrimSuffix(r, end)
 				data := strings.Split(r, "|")
-				log.Println("data", r)
+
+				if debug {
+					log.Println("data", r)
+				}
 
 				lastLine = strings.Replace(lastLine, data[0], data[1], -1)
 				lines[i-1] = lastLine

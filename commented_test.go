@@ -117,13 +117,15 @@ package {{.Package}}
 
 func TestReplacer(t *testing.T) {
 	tmpl := []byte(`
-func (u *User) FindByNAME(data string) error
-// c:replace:up [NAME|ID] - [data string|id hide.Int64]
+func (u *User) FindByNAME(data string) error {
+  // c:replace:up [User|Users] - [data string|id hide.Int64] - [NAME|ID]
+}
   `)
 
 	etmpl := `
-func (u *User) FindByID(id hide.Int64) error
+func (u *Users) FindByID(id hide.Int64) error {
 
+}
   `
 
 	tmpl = ParseReplace(tmpl, "[", "]", true)
